@@ -1,0 +1,218 @@
+[
+    {
+        "team": "Team Heretics",
+        "player_name": "RieNs",
+        "real_name": "Enes Ecirli",
+        "region": "Europe"
+    },
+    {
+        "team": "BBL PCIFIC",
+        "player_name": "Loita",
+        "real_name": "Utku Kart",
+        "region": "Turkey"
+    },
+    {
+        "team": "BBL PCIFIC",
+        "player_name": "Lar0k",
+        "real_name": "Yusuf Kaan Kanber",
+        "region": "Turkey"
+    },
+    {
+        "team": "BBL PCIFIC",
+        "player_name": "Ros\u00e9",
+        "real_name": "Eren Erzan",
+        "region": "Turkey"
+    },
+    {
+        "team": "ULF Esports",
+        "player_name": "nekky",
+        "real_name": "An\u0131l Da\u011fdeviren",
+        "region": "Turkey"
+    },
+    {
+        "team": "ULF Esports",
+        "player_name": "audaz",
+        "real_name": "Soner Ekiz",
+        "region": "Turkey"
+    },
+    {
+        "team": "ULF Esports",
+        "player_name": "sh0ut",
+        "real_name": "Muhammet Sefa Alt\u0131nta\u015f",
+        "region": "Turkey"
+    },
+    {
+        "team": "Natus Vincere",
+        "player_name": "Ruxic",
+        "real_name": "U\u011fur G\u00fc\u00e7",
+        "region": "Europe"
+    },
+    {
+        "team": "Eternal Fire",
+        "player_name": "Spear",
+        "real_name": "Arda Burak Kartal",
+        "region": "Turkey"
+    },
+    {
+        "team": "Eternal Fire",
+        "player_name": "Anima",
+        "real_name": "U\u011furcan Aydin",
+        "region": "Turkey"
+    },
+    {
+        "team": "Eternal Fire",
+        "player_name": "Brave",
+        "real_name": "Eren Kas\u0131rga",
+        "region": "Turkey"
+    },
+    {
+        "team": "G2 Esports",
+        "player_name": "valyn",
+        "real_name": "Jacob Batio",
+        "region": "United States"
+    },
+    {
+        "team": "G2 Esports",
+        "player_name": "trent",
+        "real_name": "Trent Cairns",
+        "region": "United States"
+    },
+    {
+        "team": "G2 Esports",
+        "player_name": "valyn",
+        "real_name": "Jacob Batio",
+        "region": "United States"
+    },
+    {
+        "team": "G2 Esports",
+        "player_name": "trent",
+        "real_name": "Trent Cairns",
+        "region": "United States"
+    },
+    {
+        "team": "NRG",
+        "player_name": "Ethan",
+        "real_name": "Ethan Arnold",
+        "region": "United States"
+    },
+    {
+        "team": "NRG",
+        "player_name": "brawk",
+        "real_name": "Brock Somerhalder",
+        "region": "United States"
+    },
+    {
+        "team": "NRG",
+        "player_name": "skuba",
+        "real_name": "Logan Jenkins",
+        "region": "United States"
+    },
+    {
+        "team": "Paper Rex",
+        "player_name": "d4v41",
+        "real_name": "Khalish Rusyaidee",
+        "region": "Singapore"
+    },
+    {
+        "team": "MIBR",
+        "player_name": "xenom",
+        "real_name": "Eduardo Soeiro",
+        "region": "Brazil"
+    },
+    {
+        "team": "MIBR",
+        "player_name": "Verno",
+        "real_name": "Andrew Maust",
+        "region": "Brazil"
+    },
+    {
+        "team": "MIBR",
+        "player_name": "aspas",
+        "real_name": "Erick Santos",
+        "region": "Brazil"
+    },
+    {
+        "team": "Gen.G",
+        "player_name": "Foxy9",
+        "real_name": "Jung Jae-sung (\uc815\uc7ac\uc131)",
+        "region": "South Korea"
+    },
+    {
+        "team": "Gen.G",
+        "player_name": "Karon",
+        "real_name": "Kim Won-tae (\uae40\uc6d0\ud0dc)",
+        "region": "South Korea"
+    },
+    {
+        "team": "G2 Gozen",
+        "player_name": "Akita",
+        "real_name": "Esllene Xu",
+        "region": "Europe"
+    },
+    {
+        "team": "G2 Gozen",
+        "player_name": "Vania",
+        "real_name": "Aleyna Keskin",
+        "region": "Europe"
+    },
+    {
+        "team": "G2 Gozen",
+        "player_name": "Petra",
+        "real_name": "Petra Stoker",
+        "region": "Europe"
+    },
+    {
+        "team": "Galatasaray Esports",
+        "player_name": "VenTT",
+        "real_name": "Emre Bozkurt",
+        "region": "Turkey"
+    },
+    {
+        "team": "Galatasaray Esports",
+        "player_name": "JrayN",
+        "real_name": "Ferhat Y\u0131lmaz",
+        "region": "Turkey"
+    },
+    {
+        "team": "Galatasaray Esports",
+        "player_name": "Zeask",
+        "real_name": "Muhammed Yusuf \u015eahin",
+        "region": "Turkey"
+    },
+    {
+        "team": "Misa Esports",
+        "player_name": "Antsy",
+        "real_name": "Ya\u011f\u0131z G\u00fcng\u00f6r",
+        "region": "Turkey"
+    },
+    {
+        "team": "Misa Esports",
+        "player_name": "kabzi",
+        "real_name": "Mert Oal",
+        "region": "Turkey"
+    },
+    {
+        "team": "S2G Esports",
+        "player_name": "pAura",
+        "real_name": "Melih Karaduran",
+        "region": "Turkey"
+    },
+    {
+        "team": "S2G Esports",
+        "player_name": "Rensz",
+        "real_name": "Burak Kulaks\u0131zo\u011flu",
+        "region": "Turkey"
+    },
+    {
+        "team": "S2G Esports",
+        "player_name": "reazy",
+        "real_name": "Kaan \u00dcrpek",
+        "region": "Turkey"
+    },
+    {
+        "team": "S2G Esports",
+        "player_name": "Turko",
+        "real_name": "Mehmet \u00d6zen",
+        "region": "Turkey"
+    }
+]

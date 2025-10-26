@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORDLE - Valorant Wordle</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>VALORDLE</h1>
+            </div>
+            <div class="header-right">
+                <div class="header-buttons">
+                    <button id="langBtn" class="icon-btn" title="Language / Dil">🌐</button>
+                    <button id="howToPlayBtn" class="icon-btn">?</button>
+                </div>
+                <footer class="header-footer">
+                    <p>created by <strong>Zarik</strong></p>
+                </footer>
+            </div>
+        </header>
+
+        <div id="message" class="message"></div>
+
+        <div id="gameBoard" class="game-board">
+            <!-- 6 rows, 5 tiles each -->
+        </div>
+
+        <div id="keyboard" class="keyboard">
+            <div class="keyboard-row">
+                <button class="key" data-key="Q">Q</button>
+                <button class="key" data-key="W">W</button>
+                <button class="key" data-key="E">E</button>
+                <button class="key" data-key="R">R</button>
+                <button class="key" data-key="T">T</button>
+                <button class="key" data-key="Y">Y</button>
+                <button class="key" data-key="U">U</button>
+                <button class="key" data-key="I">I</button>
+                <button class="key" data-key="O">O</button>
+                <button class="key" data-key="P">P</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="A">A</button>
+                <button class="key" data-key="S">S</button>
+                <button class="key" data-key="D">D</button>
+                <button class="key" data-key="F">F</button>
+                <button class="key" data-key="G">G</button>
+                <button class="key" data-key="H">H</button>
+                <button class="key" data-key="J">J</button>
+                <button class="key" data-key="K">K</button>
+                <button class="key" data-key="L">L</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key key-large" data-key="ENTER">ENTER</button>
+                <button class="key" data-key="Z">Z</button>
+                <button class="key" data-key="X">X</button>
+                <button class="key" data-key="C">C</button>
+                <button class="key" data-key="V">V</button>
+                <button class="key" data-key="B">B</button>
+                <button class="key" data-key="N">N</button>
+                <button class="key" data-key="M">M</button>
+                <button class="key key-large" data-key="BACKSPACE">⌫</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Modal -->
+    <div id="langModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>SELECT LANGUAGE</h2>
+            <h2 style="color: #8899a6; font-size: 1.2rem; margin-top: -10px;">DİL SEÇ</h2>
+            <div class="lang-options">
+                <button class="lang-btn" id="langEn" data-lang="en">🇬🇧 ENGLISH</button>
+                <button class="lang-btn" id="langTr" data-lang="tr">🇹🇷 TÜRKÇE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Play Modal -->
+    <div id="howToPlayModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 data-i18n="howToPlay">HOW TO PLAY</h2>
+            <p data-i18n="guess">Guess the VALORANT word in 6 tries.</p>
+            <p data-i18n="validWords">Each guess must be a valid 5-letter Valorant term.</p>
+            <p data-i18n="colorInfo">The color of the tiles will change to show how close your guess was to the word.</p>
+            
+            <div class="examples">
+                <h3 data-i18n="examples">Examples:</h3>
+                <div class="example-row">
+                    <div class="tile tile-correct">V</div>
+                    <div class="tile">I</div>
+                    <div class="tile">P</div>
+                    <div class="tile">E</div>
+                    <div class="tile">R</div>
+                </div>
+                <p><strong data-i18n="green">Green (Headshot!):</strong> <span data-i18n="greenDesc">The letter V is in the word and in the correct spot.</span></p>
+
+                <div class="example-row">
+                    <div class="tile">P</div>
+                    <div class="tile tile-present">E</div>
+                    <div class="tile">E</div>
+                    <div class="tile">K</div>
+                    <div class="tile">S</div>
+                </div>
+                <p><strong data-i18n="yellow">Yellow (Lit!):</strong> <span data-i18n="yellowDesc">The letter E is in the word but in the wrong spot.</span></p>
+
+                <div class="example-row">
+                    <div class="tile">R</div>
+                    <div class="tile">U</div>
+                    <div class="tile">S</div>
+                    <div class="tile tile-absent">H</div>
+                    <div class="tile">Y</div>
+                </div>
+                <p><strong data-i18n="gray">Gray (Miss!):</strong> <span data-i18n="grayDesc">The letter H is not in the word in any spot.</span></p>
+            </div>
+            <p class="daily-note" data-i18n="daily">A new VALORDLE will be available each day!</p>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2 id="resultTitle"></h2>
+            <p id="resultMessage"></p>
+            <div id="resultGrid"></div>
+            <button id="shareBtn" class="share-btn" data-i18n="share">SHARE</button>
+            <p id="nextGameTimer"></p>
+        </div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
