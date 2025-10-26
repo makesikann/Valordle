@@ -1,12 +1,17 @@
 // ============================================
-// VALORDLE - Frontend Game Logic (PHP API)
+// VALORDLE - Frontend Game Logic
 // ============================================
+
+// Embedded player names (5-letter only)
+const EMBEDDED_PLAYERS = [
+    'AKITA', 'ANIMA', 'ANTSY', 'ASPAS', 'AUDAZ', 'BRAVE', 'BRAWK',
+    'ETHAN', 'JRAYN', 'KABZI', 'KARON', 'LOITA', 'NEKKY', 'PAURA',
+    'PETRA', 'REAZY', 'RENSZ', 'RIENS', 'RUXIC', 'SKUBA', 'SPEAR',
+    'TRENT', 'TURKO', 'VALYN', 'VANIA', 'VENTT', 'VERNO', 'XENOM', 'ZEASK'
+];
 
 class Valordle {
     constructor() {
-        // API configuration
-        this.apiUrl = 'api_players.php';
-        
         // Game state
         this.maxGuesses = 6;
         this.wordLength = 5;
@@ -15,7 +20,7 @@ class Valordle {
         this.gameOver = false;
         this.secretWord = '';
         this.guesses = [];
-        this.wordList = [];
+        this.wordList = EMBEDDED_PLAYERS;
         
         // DOM elements
         this.gameBoard = document.getElementById('gameBoard');
@@ -32,8 +37,6 @@ class Valordle {
             translatePage();
             updateLanguageButtons();
             
-            // Fetch word list from PHP API
-            await this.fetchWordList();
             this.createBoard();
             this.attachEventListeners();
             this.loadGameState();
@@ -50,44 +53,20 @@ class Valordle {
     }
     
     // ============================================
-    // API Communication
-    // ============================================
-    
-    async fetchWordList() {
-        try {
-            const response = await fetch(`${this.apiUrl}?action=player-names`);
-            if (!response.ok) throw new Error('Failed to fetch player names');
-            const data = await response.json();
-            this.wordList = data.playerNames;
-            console.log(`Loaded ${this.wordList.length} player names from server`);
-        } catch (error) {
-            console.error('Error fetching player names:', error);
-            throw error;
-        }
-    }
-    
-    async getDailyWord() {
-        try {
-            const response = await fetch(`${this.apiUrl}?action=daily-player-word`);
-            if (!response.ok) throw new Error('Failed to fetch daily word');
-            const data = await response.json();
-            return data.dailyWord;
-        } catch (error) {
-            console.error('Error fetching daily word:', error);
-            throw error;
-        }
-    }
-    
-    // ============================================
     // Game State Management
     // ============================================
     
     getDayNumber() {
-        // Get day number since epoch (for consistent daily words)
         const start = new Date(2024, 0, 1);
         const today = new Date();
         const diff = today - start;
         return Math.floor(diff / (1000 * 60 * 60 * 24));
+    }
+    
+    getDailyWord() {
+        const dayNumber = this.getDayNumber();
+        const index = dayNumber % this.wordList.length;
+        return this.wordList[index];
     }
     
     async loadGameState() {
@@ -98,19 +77,16 @@ class Valordle {
             try {
                 const state = JSON.parse(savedState);
                 
-                // Check if it's the same day
                 if (state.dayNumber === dayNumber) {
                     this.secretWord = state.secretWord;
                     this.currentRow = state.currentRow;
                     this.guesses = state.guesses || [];
                     this.gameOver = state.gameOver || false;
                     
-                    // Restore board state
                     this.guesses.forEach((guess, index) => {
                         this.renderGuess(guess, index);
                     });
                     
-                    // Show result if game was completed
                     if (this.gameOver) {
                         setTimeout(() => this.showResult(), 500);
                     }
@@ -122,8 +98,7 @@ class Valordle {
             }
         }
         
-        // Start new game
-        await this.startNewGame();
+        this.startNewGame();
     }
     
     saveGameState() {
@@ -137,20 +112,15 @@ class Valordle {
         localStorage.setItem('valordle_state', JSON.stringify(state));
     }
     
-    async startNewGame() {
-        try {
-            this.secretWord = await this.getDailyWord();
-            this.currentRow = 0;
-            this.currentGuess = '';
-            this.guesses = [];
-            this.gameOver = false;
-            this.createBoard();
-            this.resetKeyboard();
-            this.saveGameState();
-        } catch (error) {
-            this.showMessage('Failed to load daily word');
-            console.error(error);
-        }
+    startNewGame() {
+        this.secretWord = this.getDailyWord();
+        this.currentRow = 0;
+        this.currentGuess = '';
+        this.guesses = [];
+        this.gameOver = false;
+        this.createBoard();
+        this.resetKeyboard();
+        this.saveGameState();
     }
     
     // ============================================
@@ -230,11 +200,9 @@ class Valordle {
             return;
         }
         
-        // Add guess
         this.guesses.push(this.currentGuess);
         this.renderGuess(this.currentGuess, this.currentRow);
         
-        // Check win condition
         if (this.currentGuess === this.secretWord) {
             this.gameOver = true;
             setTimeout(() => {
@@ -249,7 +217,6 @@ class Valordle {
             }, this.wordLength * 100 + 500);
         }
         
-        // Move to next row
         this.currentRow++;
         this.currentGuess = '';
         this.saveGameState();
@@ -260,7 +227,6 @@ class Valordle {
         const secretLetters = this.secretWord.split('');
         const guessLetters = guess.split('');
         
-        // First pass: mark correct positions
         const used = new Array(this.wordLength).fill(false);
         for (let i = 0; i < this.wordLength; i++) {
             if (guessLetters[i] === secretLetters[i]) {
@@ -269,7 +235,6 @@ class Valordle {
             }
         }
         
-        // Second pass: mark present letters
         for (let i = 0; i < this.wordLength; i++) {
             if (result[i]) continue;
             
@@ -300,7 +265,6 @@ class Valordle {
                             key.classList.contains('key-present') ? 'present' :
                             key.classList.contains('key-absent') ? 'absent' : null;
         
-        // Only update if new status is better
         if (status === 'correct' || 
             (status === 'present' && currentStatus !== 'correct') ||
             (status === 'absent' && !currentStatus)) {
@@ -407,7 +371,6 @@ class Valordle {
         navigator.clipboard.writeText(text).then(() => {
             this.showMessage(t('copied'));
         }).catch(() => {
-            // Fallback for older browsers
             const textarea = document.createElement('textarea');
             textarea.value = text;
             document.body.appendChild(textarea);
@@ -432,7 +395,6 @@ class Valordle {
     // ============================================
     
     attachEventListeners() {
-        // Physical keyboard
         document.addEventListener('keydown', (e) => {
             const key = e.key.toUpperCase();
             if (key === 'ENTER' || key === 'BACKSPACE') {
@@ -442,7 +404,6 @@ class Valordle {
             }
         });
         
-        // On-screen keyboard
         document.querySelectorAll('.key').forEach(key => {
             key.addEventListener('click', () => {
                 const keyValue = key.getAttribute('data-key');
@@ -450,43 +411,37 @@ class Valordle {
             });
         });
         
-        // Language button
-        document.getElementById('langBtn').addEventListener('click', () => {
-            document.getElementById('langModal').classList.add('show');
-        });
-        
-        // Language selection
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lang = btn.getAttribute('data-lang');
-                setLanguage(lang);
-                document.getElementById('langModal').classList.remove('show');
-            });
-        });
-        
-        // How to play button
         document.getElementById('howToPlayBtn').addEventListener('click', () => {
             this.showHowToPlay();
         });
         
-        // Share button
         document.getElementById('shareBtn').addEventListener('click', () => {
             this.shareResults();
         });
         
-        // Close modals
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
                 e.target.closest('.modal').classList.remove('show');
             });
         });
         
-        // Close modal on outside click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.remove('show');
                 }
+            });
+        });
+        
+        document.getElementById('langBtn').addEventListener('click', () => {
+            document.getElementById('langModal').classList.add('show');
+        });
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                setLanguage(lang);
+                document.getElementById('langModal').classList.remove('show');
             });
         });
     }
