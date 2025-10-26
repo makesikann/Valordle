@@ -202,15 +202,6 @@ Yeni oyuncuları veya önerileri şu dosyaya ekleyebilirsiniz:
 
 MIT - Özgürce kullanabilirsiniz
 
-
-## 🔗 Hızlı Linkler
-
-- 🌐 [Oyunu Oyna](http://localhost/valordle/)
-- 🎯 [API Docs](./api_players.php)
-- 🎨 [Stil Dosyası](./styles.css)
-
----
-
 **GG! Valorant dünyasında Wordle oyna ve profesyonel oyuncuları tanı!** 🎯🔥
 
 Soru veya öneri için: GitHub Issues
