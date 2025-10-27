@@ -14,11 +14,12 @@
             </div>
             <div class="header-right">
                 <div class="header-buttons">
+                    <button id="regionBtn" class="icon-btn" title="Region / Bölge">🗺️</button>
                     <button id="langBtn" class="icon-btn" title="Language / Dil">🌐</button>
                     <button id="howToPlayBtn" class="icon-btn">?</button>
                 </div>
                 <footer class="header-footer">
-                    <p>created by <strong>Zarik</strong></p>
+                    <p>Created by <strong>Zarik</strong></p>
                 </footer>
             </div>
         </header>
@@ -67,6 +68,19 @@
         </div>
     </div>
 
+    <!-- Region Modal -->
+    <div id="regionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>SELECT REGION</h2>
+            <h2 style="color: #8899a6; font-size: 1.2rem; margin-top: -10px;">BÖLGE SEÇ</h2>
+            <div class="region-options">
+                <button class="region-btn active" id="regionEMEA" data-region="emea">🌍 EMEA + Türkiye</button>
+                <button class="region-btn" id="regionNA" data-region="na">🗽 NA</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Language Modal -->
     <div id="langModal" class="modal">
         <div class="modal-content">
@@ -91,32 +105,35 @@
             
             <div class="examples">
                 <h3 data-i18n="examples">Examples:</h3>
+                <p><em>5-letter word example:</em></p>
                 <div class="example-row">
-                    <div class="tile tile-correct">V</div>
+                    <div class="tile tile-correct">R</div>
                     <div class="tile">I</div>
-                    <div class="tile">P</div>
                     <div class="tile">E</div>
-                    <div class="tile">R</div>
-                </div>
-                <p><strong data-i18n="green">Green (Headshot!):</strong> <span data-i18n="greenDesc">The letter V is in the word and in the correct spot.</span></p>
-
-                <div class="example-row">
-                    <div class="tile">P</div>
-                    <div class="tile tile-present">E</div>
-                    <div class="tile">E</div>
-                    <div class="tile">K</div>
+                    <div class="tile">N</div>
                     <div class="tile">S</div>
+                </div>
+                <p><strong data-i18n="green">Green (Headshot!):</strong> <span data-i18n="greenDesc">The letter R is in the word and in the correct spot.</span></p>
+
+                <p><em>6-letter word example:</em></p>
+                <div class="example-row">
+                    <div class="tile">R</div>
+                    <div class="tile tile-present">E</div>
+                    <div class="tile">D</div>
+                    <div class="tile">G</div>
+                    <div class="tile">A</div>
+                    <div class="tile">R</div>
                 </div>
                 <p><strong data-i18n="yellow">Yellow (Lit!):</strong> <span data-i18n="yellowDesc">The letter E is in the word but in the wrong spot.</span></p>
 
                 <div class="example-row">
-                    <div class="tile">R</div>
+                    <div class="tile">T</div>
                     <div class="tile">U</div>
-                    <div class="tile">S</div>
-                    <div class="tile tile-absent">H</div>
-                    <div class="tile">Y</div>
+                    <div class="tile">R</div>
+                    <div class="tile tile-absent">K</div>
+                    <div class="tile">O</div>
                 </div>
-                <p><strong data-i18n="gray">Gray (Miss!):</strong> <span data-i18n="grayDesc">The letter H is not in the word in any spot.</span></p>
+                <p><strong data-i18n="gray">Gray (Miss!):</strong> <span data-i18n="grayDesc">The letter K is not in the word in any spot.</span></p>
             </div>
             <p class="daily-note" data-i18n="daily">A new VALORDLE will be available each day!</p>
         </div>
@@ -128,7 +145,10 @@
             <h2 id="resultTitle"></h2>
             <p id="resultMessage"></p>
             <div id="resultGrid"></div>
-            <button id="shareBtn" class="share-btn" data-i18n="share">SHARE</button>
+            <div class="result-buttons">
+                <button id="copyBtn" class="share-btn copy-btn">📋 COPY</button>
+                <button id="shareBtn" class="share-btn">SHARE</button>
+            </div>
             <p id="nextGameTimer"></p>
         </div>
     </div>

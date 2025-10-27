@@ -2,13 +2,26 @@
 // VALORDLE - Frontend Game Logic
 // ============================================
 
-// Embedded player names (5-letter only)
-const EMBEDDED_PLAYERS = [
-    'AKITA', 'ANIMA', 'ANTSY', 'ASPAS', 'AUDAZ', 'BRAVE', 'BRAWK',
-    'ETHAN', 'JRAYN', 'KABZI', 'KARON', 'LOITA', 'NEKKY', 'PAURA',
-    'PETRA', 'REAZY', 'RENSZ', 'RIENS', 'RUXIC', 'SKUBA', 'SPEAR',
-    'TRENT', 'TURKO', 'VALYN', 'VANIA', 'VENTT', 'VERNO', 'XENOM', 'ZEASK'
-];
+// Embedded player names by region
+const REGION_PLAYERS = {
+  emea: [
+    "QRAXS", "CLOUD", "RUXIC", "RIENS", "KEIKO", "DERKE", "KICKS", "KOVAQ",
+    "VENTT", "JRAYN", "ZEASK", "NEKKY", "AUDAZ", "SHOUT", "LOITA", "LAROK",
+    "ROSE", "SPEAR", "ANIMA", "BRAVE", "ANTSY", "FAVIAN", "MERSA", "ORONI",
+    "PAURA", "RENSZ", "REAZY", "TURKO",
+    "JAMPPI", "PROFEK", "KAAJAK", "GLOVEE", "CREWEN",
+    "CYDERX", "STURNN", "OXMANN", "BURZZY", "TOUVEN", "SKYLEN"
+  ],
+  na: [
+    "VALYN", "TRENT", "MITCH", "SPIKE", "PRYZE", "BASIC", "PALLA", "ETHAN",
+    "BRAWK", "SKUBA", "KINGG", "XENOM", "VERNO", "ASPAS", "LUKXO", "TIGAS",
+    "JOHNQT", "ZEKKEN", "REDUXX", "JONAHP", "XEPPA", "NATURE", "GOBERA",
+    "NYOGEN", "VIRTYY"
+  ]
+};
+
+
+const EMBEDDED_PLAYERS = REGION_PLAYERS.emea;
 
 class Valordle {
     constructor() {
@@ -20,7 +33,9 @@ class Valordle {
         this.gameOver = false;
         this.secretWord = '';
         this.guesses = [];
-        this.wordList = EMBEDDED_PLAYERS;
+        // Get region-based word list
+        const region = typeof getRegion === 'function' ? getRegion() : 'emea';
+        this.wordList = REGION_PLAYERS[region] || REGION_PLAYERS.emea;
         
         // DOM elements
         this.gameBoard = document.getElementById('gameBoard');
@@ -31,15 +46,60 @@ class Valordle {
         this.init();
     }
     
+    // Seeded random generator
+    seededRandom(seed) {
+        const x = Math.sin(seed + 12321) * 10000;
+        return x - Math.floor(x);
+    }
+    
     async init() {
         try {
             // Translate page
             translatePage();
             updateLanguageButtons();
+            if (typeof updateRegionButtons === 'function') {
+                updateRegionButtons();
+            }
             
-            this.createBoard();
             this.attachEventListeners();
+            
+            // Check if day has changed, reset if needed
+            const today = this.getDayNumber();
+            const region = typeof getRegion === 'function' ? getRegion() : 'emea';
+            const savedDay = localStorage.getItem('valordle_day');
+            const savedRegion = localStorage.getItem('valordle_region_last');
+            
+            // Check if day changed (not region)
+            if ((savedDay !== null && parseInt(savedDay) !== today)) {
+                // Day changed, clear all regions' state
+                localStorage.removeItem('valordle_state_emea');
+                localStorage.removeItem('valordle_state_na');
+            }
+            
+            // Clean up GC state if exists
+            localStorage.removeItem('valordle_state_gc');
+            
+            localStorage.setItem('valordle_day', today.toString());
+            localStorage.setItem('valordle_region_last', region);
+            
+            // Clean up old valordle_state key
+            localStorage.removeItem('valordle_state');
+            
             this.loadGameState();
+            
+            // Create board after loading game state (wordLength will be set)
+            this.createBoard();
+            
+            // Render guesses if loading from state
+            if (this.isLoadingState && this.guesses.length > 0) {
+                this.guesses.forEach((guess, index) => {
+                    this.renderGuess(guess, index);
+                });
+                
+                if (this.showResultFlag) {
+                    setTimeout(() => this.showResult(), 500);
+                }
+            }
             
             // Show how to play on first visit
             if (!localStorage.getItem('valordle_visited')) {
@@ -57,7 +117,7 @@ class Valordle {
     // ============================================
     
     getDayNumber() {
-        const start = new Date(2024, 0, 1);
+        const start = new Date(2025, 9, 27); // October 27, 2025
         const today = new Date();
         const diff = today - start;
         return Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -65,13 +125,18 @@ class Valordle {
     
     getDailyWord() {
         const dayNumber = this.getDayNumber();
-        const index = dayNumber % this.wordList.length;
-        return this.wordList[index];
+        const randomValue = this.seededRandom(dayNumber);
+        const index = Math.floor(randomValue * this.wordList.length);
+        const word = this.wordList[index];
+        this.wordLength = word.length;
+        return word;
     }
     
     async loadGameState() {
         const dayNumber = this.getDayNumber();
-        const savedState = localStorage.getItem('valordle_state');
+        const region = typeof getRegion === 'function' ? getRegion() : 'emea';
+        const stateKey = `valordle_state_${region}`;
+        const savedState = localStorage.getItem(stateKey);
         
         if (savedState) {
             try {
@@ -79,16 +144,15 @@ class Valordle {
                 
                 if (state.dayNumber === dayNumber) {
                     this.secretWord = state.secretWord;
+                    this.wordLength = this.secretWord.length;
                     this.currentRow = state.currentRow;
                     this.guesses = state.guesses || [];
                     this.gameOver = state.gameOver || false;
-                    
-                    this.guesses.forEach((guess, index) => {
-                        this.renderGuess(guess, index);
-                    });
+                    this.regionStateKey = stateKey;
+                    this.isLoadingState = true; // Flag to render after board is created
                     
                     if (this.gameOver) {
-                        setTimeout(() => this.showResult(), 500);
+                        this.showResultFlag = true;
                     }
                     
                     return;
@@ -98,10 +162,14 @@ class Valordle {
             }
         }
         
+        this.regionStateKey = stateKey;
+        
         this.startNewGame();
     }
     
     saveGameState() {
+        const region = typeof getRegion === 'function' ? getRegion() : 'emea';
+        const stateKey = this.regionStateKey || `valordle_state_${region}`;
         const state = {
             dayNumber: this.getDayNumber(),
             secretWord: this.secretWord,
@@ -109,11 +177,12 @@ class Valordle {
             guesses: this.guesses,
             gameOver: this.gameOver
         };
-        localStorage.setItem('valordle_state', JSON.stringify(state));
+        localStorage.setItem(stateKey, JSON.stringify(state));
     }
     
     startNewGame() {
         this.secretWord = this.getDailyWord();
+        // wordLength is now set by getDailyWord()
         this.currentRow = 0;
         this.currentGuess = '';
         this.guesses = [];
@@ -333,6 +402,7 @@ class Valordle {
             text += '\n';
         });
         
+        text += '\nhttps://valordle-lovat.vercel.app/';
         return text;
     }
     
@@ -353,6 +423,11 @@ class Valordle {
         setTimeout(() => this.updateNextGameTimer(), 1000);
     }
     
+    copyResults() {
+        const text = this.generateShareText();
+        this.copyToClipboard(text);
+    }
+    
     shareResults() {
         const text = this.generateShareText();
         
@@ -368,17 +443,39 @@ class Valordle {
     }
     
     copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            this.showMessage(t('copied'));
-        }).catch(() => {
+        // Try modern Clipboard API first
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showMessage(t('copied'));
+            }).catch(() => {
+                this.fallbackCopy(text);
+            });
+        } else {
+            // Fallback for older browsers and non-secure contexts
+            this.fallbackCopy(text);
+        }
+    }
+    
+    fallbackCopy(text) {
+        try {
             const textarea = document.createElement('textarea');
             textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-999999px';
+            textarea.style.top = '-999999px';
             document.body.appendChild(textarea);
+            textarea.focus();
             textarea.select();
-            document.execCommand('copy');
+            const successful = document.execCommand('copy');
             document.body.removeChild(textarea);
-            this.showMessage(t('copied'));
-        });
+            if (successful) {
+                this.showMessage(t('copied'));
+            } else {
+                this.showMessage('Failed to copy');
+            }
+        } catch (err) {
+            this.showMessage('Failed to copy');
+        }
     }
     
     // ============================================
@@ -415,9 +512,19 @@ class Valordle {
             this.showHowToPlay();
         });
         
-        document.getElementById('shareBtn').addEventListener('click', () => {
-            this.shareResults();
-        });
+        const copyBtn = document.getElementById('copyBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                this.copyResults();
+            });
+        }
+        
+        const shareBtn = document.getElementById('shareBtn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => {
+                this.shareResults();
+            });
+        }
         
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
@@ -429,6 +536,25 @@ class Valordle {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.remove('show');
+                }
+            });
+        });
+        
+        const regionBtn = document.getElementById('regionBtn');
+        if (regionBtn) {
+            regionBtn.addEventListener('click', () => {
+                document.getElementById('regionModal').classList.add('show');
+                if (typeof updateRegionButtons === 'function') {
+                    updateRegionButtons();
+                }
+            });
+        }
+        
+        document.querySelectorAll('.region-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const region = btn.getAttribute('data-region');
+                if (typeof setRegion === 'function') {
+                    setRegion(region);
                 }
             });
         });

@@ -4,14 +4,12 @@
 
 const translations = {
     en: {
-        // Game UI
         howToPlay: "HOW TO PLAY",
         guess: "Guess the VALORANT word in 6 tries",
-        validWords: "Each guess must be a valid 5-letter Valorant term (agents, abilities, tactics, map callouts)",
+        validWords: "Every guess will be a valid 5 or 6 letter Valorant esports player (from VCT EMEA + Türkiye Birlik or Americas).",
         colorInfo: "The color of the tiles will change to show how close your guess was to the word.",
         examples: "Examples:",
         
-        // Colors
         green: "Green (Headshot!)",
         greenDesc: "The letter is in the word and in the correct spot.",
         yellow: "Yellow (Lit!)",
@@ -21,7 +19,6 @@ const translations = {
         
         daily: "A new VALORDLE will be available each day!",
         
-        // Messages
         notEnoughLetters: "Not enough letters!",
         notInWordList: "Not in word list!",
         headshot: "HEADSHOT! 🎯",
@@ -30,27 +27,22 @@ const translations = {
         wordWas: "The word was:",
         tries: "tries",
         
-        // Results
         foundWord: "You found the word in",
         of: "of",
         nextGame: "Next VALORDLE in",
         
-        // Share
         share: "SHARE",
         copied: "Copied to clipboard!",
         
-        // Navigation
         selectLanguage: "SELECT LANGUAGE",
     },
     tr: {
-        // Game UI
         howToPlay: "NASIL OYNANIR?",
         guess: "VALORANT kelimesini 6 denemede bul.",
-        validWords: "Her tahmin geçerli bir 5 harfli Valorant terimi olmalıdır (ajanlar, yetenekler, taktikler, harita çağrıları).",
+        validWords: "Her tahmin geçerli bir 5 veya 6 harfli Valorant esporcusu olacaktır (VCT EMEA + Türkiye Birlik veya Amerika).",
         colorInfo: "Taşlar rengini değiştirerek tahminin kelimeye ne kadar yakın olduğunu gösterecektir.",
         examples: "Örnekler:",
         
-        // Colors
         green: "Yeşil (Headshot!)",
         greenDesc: "Harf kelimede ve doğru pozisyonda.",
         yellow: "Sarı (Lit!)",
@@ -60,7 +52,6 @@ const translations = {
         
         daily: "Her gün yeni bir VALORDLE olacak!",
         
-        // Messages
         notEnoughLetters: "Yeterli harf yok!",
         notInWordList: "Kelime listesinde yok!",
         headshot: "HEADSHOT! 🎯",
@@ -69,31 +60,22 @@ const translations = {
         wordWas: "Kelime şuydu:",
         tries: "deneme",
         
-        // Results
         foundWord: "Kelimeyi bulduğun deneme sayısı",
         of: "of",
         nextGame: "Sonraki VALORDLE'ye",
         
-        // Share
         share: "PAYLAŞ",
         copied: "Panoya kopyalandı!",
         
-        // Navigation
         selectLanguage: "DİL SEÇ",
     }
 };
 
-/**
- * Get translated string
- */
 function t(key) {
     const lang = localStorage.getItem('valordle_lang') || 'en';
     return translations[lang]?.[key] || translations.en[key] || key;
 }
 
-/**
- * Translate all elements with data-i18n attribute
- */
 function translatePage() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -101,18 +83,12 @@ function translatePage() {
     });
 }
 
-/**
- * Set language
- */
 function setLanguage(lang) {
     localStorage.setItem('valordle_lang', lang);
     translatePage();
     updateLanguageButtons();
 }
 
-/**
- * Update language button states
- */
 function updateLanguageButtons() {
     const lang = localStorage.getItem('valordle_lang') || 'en';
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -123,9 +99,26 @@ function updateLanguageButtons() {
     });
 }
 
-/**
- * Get current language
- */
 function getCurrentLanguage() {
     return localStorage.getItem('valordle_lang') || 'en';
+}
+
+function setRegion(region) {
+    localStorage.setItem('valordle_region', region);
+    updateRegionButtons();
+    location.reload();
+}
+
+function getRegion() {
+    return localStorage.getItem('valordle_region') || 'emea';
+}
+
+function updateRegionButtons() {
+    const region = getRegion();
+    document.querySelectorAll('.region-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-region') === region) {
+            btn.classList.add('active');
+        }
+    });
 }

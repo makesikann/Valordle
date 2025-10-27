@@ -4,12 +4,13 @@ Valorant profesyonel oyuncularının isimleriyle oynanan Wordle oyunu! Her gün 
 
 ## 🎮 Oyun Nasıl Oynanır?
 
-1. **Amaç**: Haftanın oyuncusu adını 6 denemede tahmin et
-2. **Tahmin**: Her tahmin 5 harfli bir Valorant pro oyuncusunun adı olmalı
+1. **Amaç**: Günün pro oyuncusu adını 6 denemede tahmin et
+2. **Tahmin**: Her tahmin 5-6 harfli bir Valorant pro oyuncusunun adı olmalı (seçilen kelimeye göre)
 3. **Geri Bildirim**: 
    - 🟩 **Yeşil (Headshot!)**: Harf doğru pozisyondadır
    - 🟨 **Sarı (Lit!)**: Harf kelimede var ama yanlış yerde
    - ⬛ **Gri (Miss!)**: Harf kelimede yok
+4. **Bölge Seçimi**: 🗺️ Tuşu ile bölge değiştir (EMEA + Türkiye / NA)
 
 ## 📁 Proje Yapısı
 
@@ -19,18 +20,14 @@ valordle/
 ├── styles.css              # Valorant temalı CSS
 ├── script.js               # Oyun mantığı (JavaScript)
 ├── i18n.js                 # Türkçe/İngilizce çeviri sistemi
-├── api_players.php         # PHP API - Oyuncu isimleri
 ├── font/
 │   └── valorant.ttf        # Custom Valorant fontu
-├── data/
-│   └── players.json        # Valorant pro oyuncuları (30+)
 └── README.md               # Türkçe dokümantasyon (bu dosya)
 ```
 
 ## 🚀 Kurulum ve Çalıştırma
 
 ### Gereksinimler
-- XAMPP veya benzeri PHP sunucusu (Apache)
 - Modern web tarayıcı (Chrome, Firefox, Safari, Edge)
 
 ### Adımlar
@@ -45,7 +42,7 @@ valordle/
 
 3. **Tarayıcıda aç**
    ```
-   http://localhost/valordle/
+   http://localhost/
    ```
 
 4. **Oyna!** 🎮
@@ -55,8 +52,10 @@ valordle/
 ### ✅ Temel Özellikler
 - 🎮 Günlük oyuncu adı sistemi (herkes aynı oyuncu adını alır)
 - 6️⃣ 6 deneme hakkı
-- 🌐 Türkçe/İngilizce dil seçeneği
-- 💾 Oyun durumu otomatik kaydedilir
+- 🌍 **Bölge Seçimi**: EMEA + Türkiye, NA (her bölgeın ayrı oyunu)
+- 📏 **Dinamik Uzunluk**: 5-6 harfli kelimeler (kutucuk sayısı otomatik ayarlanır)
+- 🌐 Türçe/İngilizce dil seçeneği
+- 📋 Oyun durumu otomatik kaydedilir (bölge başı ayrı saklanır)
 - 📱 Mobil ve masaüstü uyumlu (responsive)
 
 ### 🎨 Tasarım
@@ -104,48 +103,45 @@ Oyuncular ülkelere göre organize edilir:
 - **CSS3**: Grid, Flexbox, Gradients, Animasyonlar
 - **JavaScript**: Vanilla JS, modular yapı
 
-### Backend
-- **PHP**: Lightweight API
-- **JSON**: Veri depolama
-- **CORS**: Cross-origin istekler
-
-### API Endpoints
-```
-GET /api_players.php?action=player-names     # Tüm oyuncu adları
-GET /api_players.php?action=daily-player-word # Günün oyuncusu
-```
 
 ## 📝 Oyuncu Listesi Yönetimi
 
 ### Yeni Oyuncu Ekleme
-1. `data/players.json` dosyasını açın
-2. Yeni oyuncu ekleyin (5 harfli isim):
-```json
-{
-  "team": "Takım Adı",
-  "player_name": "NICKNAME",
-  "real_name": "Gerçek Ad",
-  "region": "Bölge"
-}
+Oyuncu listesi doğrudan `script.js` içinde `REGION_PLAYERS` objesinde tutulur:
+
+```javascript
+const REGION_PLAYERS = {
+    emea: ['QRAXS', 'CLOUD', 'RUXIC', 'RIENS', ..., 'REDGAR', 'TREBOL'],
+    na: ['ASUNA', 'CRYO_', 'DICEY', 'FROSTY', ..., 'DEMON1', 'ETHAN_']
+};
 ```
+
+**5 ve 6 harfli oyuncular ekleyebilirsiniz:**
+- 5 harfli: `'RIENS'`, `'VALYN'`
+- 6 harfli: `'REDGAR'`, `'TREBOL'`
+
+1. `script.js` dosyasını açın
+2. İlgili bölgeye oyuncu adı ekleyin
 3. Dosyayı kaydedin
 4. Sayfayı yenileyin
-
-### Kelime Listesi Düzenleme
-- Alternatif kelimeler: `data/words.json`
-- Format: 5 harfli, büyük harfle yazılı
 
 ## 🎓 Nasıl Çalışır?
 
 ### Günlük Kelime Hesaplaması
 ```javascript
-dayNumber = 2024-01-01 den bugüne gün sayısı
-wordIndex = dayNumber % oyuncu_listesi_uzunluğu
-günün_oyuncusu = oyuncu_listesi[wordIndex]
+dayNumber = 2025-10-27 den bugüne gün sayısı
+seededRandom(dayNumber) = Pseudo-random sayı (deterministik)
+wordIndex = seededRandom(dayNumber) * oyuncu_listesi_uzunluğu
+gününn_oyuncusu = oyuncu_listesi[wordIndex]
 ```
 
+### Dinamik Uzunluk
+- Seçilen oyuncu adı 5 harfli ise: 5 kutucuk göster
+- Seçilen oyuncu adı 6 harfli ise: 6 kutucuk göster
+- `wordLength` otomatik olarak `getDailyWord()` tarafından ayarlanır
+
 ### Tahmin Kontrolü
-1. Girilen kelime 5 harf olmalı
+1. Girilen kelime `wordLength` kadar harf olmalı
 2. Oyuncu listesinde bulunmalı
 3. Sonuç renkleri atanır (yeşil/sarı/gri)
 
@@ -162,13 +158,9 @@ günün_oyuncusu = oyuncu_listesi[wordIndex]
 
 ### Oyun yüklenmiyorsa
 - Apache'nin çalıştığını kontrol et
-- `http://localhost/valordle/` URL'i kontrol et
+- `http://localhost/` URL'i kontrol et
 - Tarayıcı konsolunu aç (F12) ve hataları kontrol et
 
-### Kelimeler yüklenmiyorsa
-- `data/players.json` dosyasının var olduğunu kontrol et
-- JSON format geçerli mi kontrol et (`https://jsonlint.com`)
-- API call: `http://localhost/valordle/api_players.php?action=player-names`
 
 ### Dil değişmiyor
 - localStorage temizle: DevTools > Application > Clear
