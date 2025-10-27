@@ -185,11 +185,6 @@ gününn_oyuncusu = oyuncu_listesi[wordIndex]
 - **Günlük Tekrar**: Evet (1x/gün)
 - **Dil Seçeneği**: 2 (Türkçe + İngilizce)
 
-## 🤝 Katkı
-
-Yeni oyuncuları veya önerileri şu dosyaya ekleyebilirsiniz:
-- `data/players.json` - Oyuncu listesi
-
 ## 📄 Lisans
 
 MIT - Özgürce kullanabilirsiniz
