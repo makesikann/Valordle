@@ -67,10 +67,10 @@ class Valordle {
             // Create board after loading game state (wordLength will be set)
             this.createBoard();
             
-            // Render guesses if loading from state
+            // Render guesses if loading from state (skip animations)
             if (this.isLoadingState && this.guesses.length > 0) {
                 this.guesses.forEach((guess, index) => {
-                    this.renderGuess(guess, index);
+                    this.renderGuess(guess, index, true);
                 });
                 
                 if (this.showResultFlag) {
@@ -197,17 +197,21 @@ class Valordle {
         }
     }
     
-    renderGuess(guess, rowIndex) {
+    renderGuess(guess, rowIndex, skipAnimation = false) {
         const result = this.checkGuess(guess);
         
         result.forEach((status, colIndex) => {
             const tile = document.querySelector(`[data-row="${rowIndex}"][data-col="${colIndex}"]`);
             if (tile) {
+                const delay = skipAnimation ? 0 : colIndex * 100;
                 setTimeout(() => {
                     tile.textContent = guess[colIndex];
+                    if (!skipAnimation) {
+                        tile.classList.add('tile-flip');
+                    }
                     tile.classList.add(`tile-${status}`);
                     this.updateKeyboard(guess[colIndex], status);
-                }, colIndex * 100);
+                }, delay);
             }
         });
     }
