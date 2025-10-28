@@ -6,7 +6,7 @@ const translations = {
     en: {
         howToPlay: "HOW TO PLAY",
         guess: "Guess the VALORANT word in 6 tries",
-        validWords: "Every guess will be a valid 5 or 6 letter Valorant esports player (from VCT EMEA + Türkiye Birlik or Americas).",
+        validWords: "Every guess will be a valid 5 or 6 letter Valorant esports player.",
         colorInfo: "The color of the tiles will change to show how close your guess was to the word.",
         examples: "Examples:",
         
@@ -39,7 +39,7 @@ const translations = {
     tr: {
         howToPlay: "NASIL OYNANIR?",
         guess: "VALORANT kelimesini 6 denemede bul.",
-        validWords: "Her tahmin geçerli bir 5 veya 6 harfli Valorant esporcusu olacaktır (VCT EMEA + Türkiye Birlik veya Amerika).",
+        validWords: "Her tahmin geçerli bir 5 veya 6 harfli Valorant esporcusu olacaktır.",
         colorInfo: "Taşlar rengini değiştirerek tahminin kelimeye ne kadar yakın olduğunu gösterecektir.",
         examples: "Örnekler:",
         
@@ -103,22 +103,3 @@ function getCurrentLanguage() {
     return localStorage.getItem('valordle_lang') || 'en';
 }
 
-function setRegion(region) {
-    localStorage.setItem('valordle_region', region);
-    updateRegionButtons();
-    location.reload();
-}
-
-function getRegion() {
-    return localStorage.getItem('valordle_region') || 'emea';
-}
-
-function updateRegionButtons() {
-    const region = getRegion();
-    document.querySelectorAll('.region-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-region') === region) {
-            btn.classList.add('active');
-        }
-    });
-}

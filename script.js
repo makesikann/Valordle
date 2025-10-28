@@ -2,26 +2,18 @@
 // VALORDLE - Frontend Game Logic
 // ============================================
 
-// Embedded player names by region
-const REGION_PLAYERS = {
-  emea: [
-    "QRAXS", "CLOUD", "RUXIC", "RIENS", "KEIKO", "DERKE", "KICKS", "KOVAQ",
-    "VENTT", "JRAYN", "ZEASK", "NEKKY", "AUDAZ", "SHOUT", "LOITA", "LAROK",
-    "ROSE", "SPEAR", "ANIMA", "BRAVE", "ANTSY", "FAVIAN", "MERSA", "ORONI",
-    "PAURA", "RENSZ", "REAZY", "TURKO",
-    "JAMPPI", "PROFEK", "KAAJAK", "GLOVEE", "CREWEN",
-    "CYDERX", "STURNN", "OXMANN", "BURZZY", "TOUVEN", "SKYLEN"
-  ],
-  na: [
-    "VALYN", "TRENT", "MITCH", "SPIKE", "PRYZE", "BASIC", "PALLA", "ETHAN",
-    "BRAWK", "SKUBA", "KINGG", "XENOM", "VERNO", "ASPAS", "LUKXO", "TIGAS",
-    "JOHNQT", "ZEKKEN", "REDUXX", "JONAHP", "XEPPA", "NATURE", "GOBERA",
-    "NYOGEN", "VIRTYY"
-  ]
-};
-
-
-const EMBEDDED_PLAYERS = REGION_PLAYERS.emea;
+// Embedded player names (EMEA only)
+const PLAYERS = [
+  "RIENS", "CLOUD", "PROFEK", "MAGNUM", "CHHIA", "JAMPPI", "KICKS", "DERKE",
+  "KOVAQ", "PAURA", "KEIKO", "KAAJAK", "RUXIC", "QRAXS", "KAMYK", "PROXH",
+  "VEQJ", "MOLSI", "AVOVA", "PENNY", "CREWEN", "LOITA", "LAROK", "NEKKY",
+  "AUDAZ", "FAVIAN", "YIGOX", "BRAVE", "ANIMA", "CYDERX", "GLOVEE", "JRAYN",
+  "VENTT", "TURKO", "TREXX", "REAZY", "RENSZ", "BURZZY", "MERSA", "OXMANN",
+  "ORONI", "STERBEN", "GLOOMY", "TOUVEN", "SKYLEN", "SPEAR", "KABZI", "STURNN",
+  "DERREK", "ASUNA", "KEZNIT", "XENOM", "VERNO", "ASPAS", "ETHAN", "BRAWK",
+  "SKUBA", "JOHNQT", "ZEKKEN", "VALYN", "TRENT", "JONAHP", "KARON", "METEOR",
+  "AIMDLL", "LEGOO", "BEYAZ", "MASIC", "REDGAR", "ZYPPAN"
+];
 
 class Valordle {
     constructor() {
@@ -33,9 +25,8 @@ class Valordle {
         this.gameOver = false;
         this.secretWord = '';
         this.guesses = [];
-        // Get region-based word list
-        const region = typeof getRegion === 'function' ? getRegion() : 'emea';
-        this.wordList = REGION_PLAYERS[region] || REGION_PLAYERS.emea;
+        // Word list (EMEA only)
+        this.wordList = PLAYERS;
         
         // DOM elements
         this.gameBoard = document.getElementById('gameBoard');
@@ -57,33 +48,19 @@ class Valordle {
             // Translate page
             translatePage();
             updateLanguageButtons();
-            if (typeof updateRegionButtons === 'function') {
-                updateRegionButtons();
-            }
             
             this.attachEventListeners();
             
             // Check if day has changed, reset if needed
             const today = this.getDayNumber();
-            const region = typeof getRegion === 'function' ? getRegion() : 'emea';
             const savedDay = localStorage.getItem('valordle_day');
-            const savedRegion = localStorage.getItem('valordle_region_last');
             
-            // Check if day changed (not region)
+            // Check if day changed
             if ((savedDay !== null && parseInt(savedDay) !== today)) {
-                // Day changed, clear all regions' state
-                localStorage.removeItem('valordle_state_emea');
-                localStorage.removeItem('valordle_state_na');
+                localStorage.removeItem('valordle_state');
             }
             
-            // Clean up GC state if exists
-            localStorage.removeItem('valordle_state_gc');
-            
             localStorage.setItem('valordle_day', today.toString());
-            localStorage.setItem('valordle_region_last', region);
-            
-            // Clean up old valordle_state key
-            localStorage.removeItem('valordle_state');
             
             this.loadGameState();
             
@@ -134,8 +111,7 @@ class Valordle {
     
     async loadGameState() {
         const dayNumber = this.getDayNumber();
-        const region = typeof getRegion === 'function' ? getRegion() : 'emea';
-        const stateKey = `valordle_state_${region}`;
+        const stateKey = 'valordle_state';
         const savedState = localStorage.getItem(stateKey);
         
         if (savedState) {
@@ -148,7 +124,6 @@ class Valordle {
                     this.currentRow = state.currentRow;
                     this.guesses = state.guesses || [];
                     this.gameOver = state.gameOver || false;
-                    this.regionStateKey = stateKey;
                     this.isLoadingState = true; // Flag to render after board is created
                     
                     if (this.gameOver) {
@@ -162,14 +137,11 @@ class Valordle {
             }
         }
         
-        this.regionStateKey = stateKey;
-        
         this.startNewGame();
     }
     
     saveGameState() {
-        const region = typeof getRegion === 'function' ? getRegion() : 'emea';
-        const stateKey = this.regionStateKey || `valordle_state_${region}`;
+        const stateKey = 'valordle_state';
         const state = {
             dayNumber: this.getDayNumber(),
             secretWord: this.secretWord,
@@ -536,25 +508,6 @@ class Valordle {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.remove('show');
-                }
-            });
-        });
-        
-        const regionBtn = document.getElementById('regionBtn');
-        if (regionBtn) {
-            regionBtn.addEventListener('click', () => {
-                document.getElementById('regionModal').classList.add('show');
-                if (typeof updateRegionButtons === 'function') {
-                    updateRegionButtons();
-                }
-            });
-        }
-        
-        document.querySelectorAll('.region-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const region = btn.getAttribute('data-region');
-                if (typeof setRegion === 'function') {
-                    setRegion(region);
                 }
             });
         });

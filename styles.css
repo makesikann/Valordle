@@ -515,39 +515,6 @@ h1 {
     color: #0f1923;
 }
 
-/* Region Selector */
-.region-options {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.region-btn {
-    padding: 15px 20px !important;
-    background: rgba(255, 70, 85, 0.2) !important;
-    border: 2px solid #ff4655 !important;
-    color: #fff !important;
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    font-family: 'Arial', sans-serif !important;
-    display: block !important;
-    width: 100% !important;
-    text-align: left !important;
-}
-
-.region-btn:hover {
-    background: #ff4655 !important;
-    transform: scale(1.05) !important;
-}
-
-.region-btn.active {
-    background: #00f5a0 !important;
-    border-color: #00f5a0 !important;
-    color: #0f1923 !important;
-}
 
 /* Footer */
 footer {

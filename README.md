@@ -10,7 +10,6 @@ Valorant profesyonel oyuncularının isimleriyle oynanan Wordle oyunu! Her gün 
    - 🟩 **Yeşil (Headshot!)**: Harf doğru pozisyondadır
    - 🟨 **Sarı (Lit!)**: Harf kelimede var ama yanlış yerde
    - ⬛ **Gri (Miss!)**: Harf kelimede yok
-4. **Bölge Seçimi**: 🗺️ Tuşu ile bölge değiştir (EMEA + Türkiye / NA)
 
 ## 📁 Proje Yapısı
 
@@ -52,7 +51,6 @@ valordle/
 ### ✅ Temel Özellikler
 - 🎮 Günlük oyuncu adı sistemi (herkes aynı oyuncu adını alır)
 - 6️⃣ 6 deneme hakkı
-- 🌍 **Bölge Seçimi**: EMEA + Türkiye, NA (her bölgeın ayrı oyunu)
 - 📏 **Dinamik Uzunluk**: 5-6 harfli kelimeler (kutucuk sayısı otomatik ayarlanır)
 - 🌐 Türçe/İngilizce dil seçeneği
 - 📋 Oyun durumu otomatik kaydedilir (bölge başı ayrı saklanır)
@@ -107,13 +105,10 @@ Oyuncular ülkelere göre organize edilir:
 ## 📝 Oyuncu Listesi Yönetimi
 
 ### Yeni Oyuncu Ekleme
-Oyuncu listesi doğrudan `script.js` içinde `REGION_PLAYERS` objesinde tutulur:
+Oyuncu listesi doğrudan `script.js` içinde `PLAYERS` dizisinde tutulur:
 
 ```javascript
-const REGION_PLAYERS = {
-    emea: ['QRAXS', 'CLOUD', 'RUXIC', 'RIENS', ..., 'REDGAR', 'TREBOL'],
-    na: ['ASUNA', 'CRYO_', 'DICEY', 'FROSTY', ..., 'DEMON1', 'ETHAN_']
-};
+const PLAYERS = ['QRAXS', 'CLOUD', 'RUXIC', 'RIENS', ..., 'REDGAR', 'ZYPPAN'];
 ```
 
 **5 ve 6 harfli oyuncular ekleyebilirsiniz:**
